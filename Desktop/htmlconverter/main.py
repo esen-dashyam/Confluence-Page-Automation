@@ -48,62 +48,62 @@ WHERE IS_DOCUMENTED IS NULL OR IS_DOCUMENTED = 'N'
         except Exception as err:
             logging.error("[%s] Error executing query: %s", datetime.datetime.now(), err)
 # Neg udaa ajiluulah code baisan shvv.Anh vvsgesen documentedsee Y or N gej automatically angilaj chadahgui baisan uchir neg udaadaa iim code bichiv 
-# def update_documented_list():
-#     headers = {
-#         "Accept": "application/json",
-#         "Authorization": "Basic ZXJwQHVuaXRlbC5tbjpBOEVYMnExcHR6ZmdFb0xsWTFrdUE0MEE="
-#     }
+def update_documented_list():
+    headers = {
+        "Accept": "application/json",
+        "Authorization": "Basic ZXJwQHVuaXRlbC5tbjpBOEVYMnExcHR6ZmdFb0xsWTFrdUE0MEE="
+    }
 
-#     # Fetch all page IDs from the database
-#     conn = cx_Oracle.connect(
-#         config.username,
-#         config.password,
-#         config.dsn,
-#         encoding=config.encoding)
-#     cur = conn.cursor()
-#     try:
-#         sql_demo = """SELECT PAGE_ID FROM uni_dynamic_report.Confluence_enforce_table"""
-#         cur.execute(sql_demo)
-#         urls = cur.fetchall()
-#         documented_ids = {int(url[0]) for url in urls}
-#     except Exception as err:
-#         print("Error executing query", err)
-#     finally:
-#         if cur:
-#             cur.close()
-#         if conn:
-#             conn.close()
+    # Fetch all page IDs from the database
+    conn = cx_Oracle.connect(
+        config.username,
+        config.password,
+        config.dsn,
+        encoding=config.encoding)
+    cur = conn.cursor()
+    try:
+        sql_demo = """SELECT PAGE_ID FROM uni_dynamic_report.Confluence_enforce_table"""
+        cur.execute(sql_demo)
+        urls = cur.fetchall()
+        documented_ids = {int(url[0]) for url in urls}
+    except Exception as err:
+        print("Error executing query", err)
+    finally:
+        if cur:
+            cur.close()
+        if conn:
+            conn.close()
 
-#     # Fetch all page IDs from Confluence
-#     new_id_list = set()
-#     for number in range(0, 4224, 1):
-#         response = requests.get("https://unitelgroup.atlassian.net/wiki/rest/api/content/908329019/child/page?limit=1&start=" + str(number), headers=headers)
-#         results = response.json().get('results', [])
-#         for result in results:
-#             new_id_list.add(int(result.get('id', 0)))
+    # Fetch all page IDs from Confluence
+    new_id_list = set()
+    for number in range(0, 4224, 1):
+        response = requests.get("https://unitelgroup.atlassian.net/wiki/rest/api/content/908329019/child/page?limit=1&start=" + str(number), headers=headers)
+        results = response.json().get('results', [])
+        for result in results:
+            new_id_list.add(int(result.get('id', 0)))
 
-#     # Update the database with new documented IDs
-#     conn = cx_Oracle.connect(
-#         config.username,
-#         config.password,
-#         config.dsn,
-#         encoding=config.encoding)
-#     cur = conn.cursor()
-#     try:
-#         num_updated_docs = 0
-#         for id in documented_ids:
-#             if id not in new_id_list:
-#                 cur.execute("UPDATE uni_dynamic_report.Confluence_enforce_table SET IS_DOCUMENTED = 'Y' WHERE PAGE_ID = ?", (id,))
-#                 conn.commit()
-#                 num_updated_docs += 1
-#         print(f"Updated {num_updated_docs} page IDs in the database.")
-#     except Exception as err:
-#         print("Error executing query", err)
-#     finally:
-#         if cur:
-#             cur.close()
-#         if conn:
-#             conn.close()
+    # Update the database with new documented IDs
+    conn = cx_Oracle.connect(
+        config.username,
+        config.password,
+        config.dsn,
+        encoding=config.encoding)
+    cur = conn.cursor()
+    try:
+        num_updated_docs = 0
+        for id in documented_ids:
+            if id not in new_id_list:
+                cur.execute("UPDATE uni_dynamic_report.Confluence_enforce_table SET IS_DOCUMENTED = 'Y' WHERE PAGE_ID = ?", (id,))
+                conn.commit()
+                num_updated_docs += 1
+        print(f"Updated {num_updated_docs} page IDs in the database.")
+    except Exception as err:
+        print("Error executing query", err)
+    finally:
+        if cur:
+            cur.close()
+        if conn:
+            conn.close()
 
 def update_engineer():
     # print(body_fetch(916357158))
